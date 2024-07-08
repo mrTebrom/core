@@ -43,7 +43,7 @@ export class RoleController {
 
   // Получение всех ролей
   @ApiOperation({ summary: 'Получение всех ролей' })
-  @ApiResponse({ status: 200, description: 'Список всех ролей.' })
+  @ApiResponse({ status: 200, description: 'Список всех ролей.', type: [Role] })
   @Get()
   async findAll(): Promise<Role[]> {
     return this.roleService.findAll();
