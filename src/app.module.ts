@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RoleModule } from './role/role.module';
+import { Role } from './role/entity/role.entity';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RoleModule } from './role/role.module';
         autoLoadModels: true,
         synchronize: true,
         logging: false,
+        models: [Role],
       }),
       inject: [ConfigService],
     }),
