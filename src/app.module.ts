@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AppService } from './app.service';
       }),
       inject: [ConfigService],
     }),
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
