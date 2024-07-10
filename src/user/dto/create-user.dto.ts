@@ -4,11 +4,9 @@ import {
   IsString,
   IsPhoneNumber,
   MinLength,
-  Validate,
   IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AtLeastOne } from '../validators/at-least-one-validator';
 
 export class CreateUserDto {
   // Поле username должно быть строкой
@@ -47,15 +45,4 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Пароль не должен быть пустым' })
   @MinLength(8, { message: 'Пароль должен содержать минимум 8 символов' })
   password: string;
-
-  @Validate(AtLeastOne, [['username', 'email', 'phone']], {
-    message:
-      'По крайней мере одно из полей username, email или phone должно быть заполнено',
-  })
-  @ApiProperty({
-    description:
-      'По крайней мере одно из полей username, email или phone должно быть заполнено',
-    required: true,
-  })
-  _: string; // Это поле используется только для проверки валидатора AtLeastOne и не будет сохраняться
 }

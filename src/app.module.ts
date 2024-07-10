@@ -8,7 +8,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RoleModule } from './role/role.module';
 import { Role } from './role/entity/role.entity';
-import { UserService } from './user/user.service';
+import { User } from './user/entity/user.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { UserService } from './user/user.service';
         autoLoadModels: true,
         synchronize: true,
         logging: false,
-        models: [Role],
+        models: [Role, User],
       }),
       inject: [ConfigService],
     }),
@@ -38,8 +39,9 @@ import { UserService } from './user/user.service';
       inject: [ConfigService],
     }),
     RoleModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
 export class AppModule {}
