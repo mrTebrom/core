@@ -9,7 +9,6 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  // Поле username должно быть строкой
   @ApiProperty({
     example: 'john_doe',
     description: 'Имя пользователя',
@@ -19,7 +18,6 @@ export class CreateUserDto {
   @IsOptional()
   username: string;
 
-  // Поле email должно быть валидным email адресом
   @ApiProperty({
     example: 'john@example.com',
     description: 'Электронная почта пользователя',
@@ -29,7 +27,6 @@ export class CreateUserDto {
   @IsOptional()
   email: string;
 
-  // Поле phone должно быть валидным номером телефона
   @ApiProperty({
     example: '+1234567890',
     description: 'Номер телефона пользователя',
@@ -39,7 +36,6 @@ export class CreateUserDto {
   @IsOptional()
   phone: string;
 
-  // Поле password должно быть строкой, не должно быть пустым и должно содержать минимум 8 символов
   @ApiProperty({ example: 'password123', description: 'Пароль пользователя' })
   @IsString({ message: 'Пароль должен быть строкой' })
   @IsNotEmpty({ message: 'Пароль не должен быть пустым' })

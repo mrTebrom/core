@@ -6,10 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+// role
 import { RoleModule } from './role/role.module';
 import { Role } from './role/entity/role.entity';
-import { User } from './user/entity/user.entity';
+// user
 import { UserModule } from './user/user.module';
+import { User } from './user/entity/user.entity';
 
 @Module({
   imports: [
