@@ -29,7 +29,7 @@ export class User extends Model<CreateUserDto, User> {
   @ApiProperty({ example: 'john_doe', description: 'Имя пользователя' })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   username: string;
 
@@ -39,7 +39,7 @@ export class User extends Model<CreateUserDto, User> {
   })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   })
   email: string;
@@ -50,7 +50,7 @@ export class User extends Model<CreateUserDto, User> {
   })
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
   })
   phone: string;
 

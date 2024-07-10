@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RoleModule } from './role/role.module';
 import { Role } from './role/entity/role.entity';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -39,6 +40,6 @@ import { Role } from './role/entity/role.entity';
     RoleModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UserService],
 })
 export class AppModule {}
