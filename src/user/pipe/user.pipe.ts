@@ -6,30 +6,36 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 export class UserPipe implements PipeTransform {
   transform(value: CreateUserDto | UpdateUserDto) {
     console.log('Pipe transform called');
+    console.log('Incoming value:', value);
 
-    // Проверяем, что значение является объектом
-    if (typeof value !== 'object' || value === null) {
-      throw new BadRequestException('Invalid data format');
-    }
+    // // Проверяем, что значение является объектом
+    // if (typeof value !== 'object' || value === null) {
+    //   throw new BadRequestException('Invalid data format');
+    // }
 
-    // Пропускаем пустые объекты
-    if (Object.keys(value).length === 0) {
-      return value;
-    }
+    // // Пропускаем пустые объекты
+    // if (Object.keys(value).length === 0) {
+    //   console.log('Empty object passed, returning value');
+    //   return value;
+    // }
 
-    let { username, email, phone } = value;
+    const { username, email, phone } = value;
 
-    console.log(`username=${username} email=${email} phone=${phone}`);
-    console.log('value=', value);
+    console.log(`username=${username}, email=${email}, phone=${phone}`);
 
     // Убедимся, что поля имеют правильные типы данных
-    username = username && typeof username === 'string' ? username : undefined;
-    email = email && typeof email === 'string' ? email : undefined;
-    phone = phone && typeof phone === 'string' ? phone : undefined;
+    if (username && typeof username !== 'string') {
+      throw new BadRequestException('Invalid type for username');
+    }
+    if (email && typeof email !== 'string') {
+      throw new BadRequestException('Invalid type for email');
+    }
+    if (phone && typeof phone !== 'string') {
+      throw new BadRequestException('Invalid type for phone');
+    }
 
     // Проверка наличия хотя бы одного из полей
     if (!username && !email && !phone) {
-      console.log('error');
       throw new BadRequestException(
         'По крайней мере одно из полей username, email или phone должно быть заполнено',
       );
@@ -38,20 +44,25 @@ export class UserPipe implements PipeTransform {
     // Приводим значения полей к нижнему регистру при наличии данных
     if (username) {
       value.username = username.toLowerCase();
+      console.log('Transformed username:', value.username);
     }
 
     if (email) {
       value.email = email.toLowerCase();
+      console.log('Transformed email:', value.email);
     }
 
     if (phone) {
       value.phone = phone.toLowerCase();
+      console.log('Transformed phone:', value.phone);
     }
 
     if (value.password && typeof value.password === 'string') {
       value.password = value.password.toLowerCase();
+      console.log('Transformed password:', value.password);
     }
 
+    console.log('Transformed value:', value);
     return value;
   }
 }

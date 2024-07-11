@@ -29,7 +29,7 @@ export class UserController {
     description: 'Некорректные данные или пользователь уже существует.',
   })
   @Post()
-  @UsePipes(new UserPipe())
+  @UsePipes(UserPipe)
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
@@ -80,10 +80,9 @@ export class UserController {
     description: 'Некорректные данные или пользователь уже существует.',
   })
   @Patch(':id')
-  @UsePipes(new UserPipe())
   async update(
-    @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: number,
   ): Promise<{ message: string }> {
     try {
       return await this.service.update(id, updateUserDto);
