@@ -5,20 +5,6 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 @Injectable()
 export class UserPipe implements PipeTransform {
   transform(value: CreateUserDto | UpdateUserDto) {
-    console.log('Pipe transform called');
-    console.log('Incoming value:', value);
-
-    // // Проверяем, что значение является объектом
-    // if (typeof value !== 'object' || value === null) {
-    //   throw new BadRequestException('Invalid data format');
-    // }
-
-    // // Пропускаем пустые объекты
-    // if (Object.keys(value).length === 0) {
-    //   console.log('Empty object passed, returning value');
-    //   return value;
-    // }
-
     const { username, email, phone } = value;
 
     console.log(`username=${username}, email=${email}, phone=${phone}`);

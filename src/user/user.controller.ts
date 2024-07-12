@@ -4,11 +4,11 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   UsePipes,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -79,7 +79,7 @@ export class UserController {
     status: 400,
     description: 'Некорректные данные или пользователь уже существует.',
   })
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Body() updateUserDto: UpdateUserDto,
     @Param('id') id: number,
