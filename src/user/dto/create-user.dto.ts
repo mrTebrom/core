@@ -5,6 +5,9 @@ import {
   IsPhoneNumber,
   MinLength,
   IsOptional,
+  IsArray,
+  ArrayMinSize,
+  IsInt,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -45,4 +48,20 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Пароль не должен быть пустым' })
   @MinLength(3, { message: 'Пароль должен содержать минимум 3 символов' })
   password: string;
+
+  @ApiProperty({
+    example: [1, 2],
+    description: 'Роли пользователя',
+    required: false,
+  })
+  @IsArray({ message: 'Роли должны быть массивом чисел' })
+  @ArrayMinSize(1, {
+    message: 'Должен быть хотя бы один элемент в массиве ролей',
+  })
+  @IsInt({
+    each: true,
+    message: 'Каждый элемент массива ролей должен быть целым числом',
+  })
+  @IsOptional()
+  roles: number[];
 }
