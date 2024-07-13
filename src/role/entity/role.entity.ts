@@ -5,9 +5,12 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateRoleDto } from '../dto/create-role.dto';
+import { User } from '../../user/entity/user.entity';
+import { UserRole } from '../../user/entity/user-role.entity';
 
 @Table({
   tableName: 'roles',
@@ -43,4 +46,7 @@ export class Role extends Model<CreateRoleDto, Role> {
     allowNull: false,
   })
   description: string; // Описание роли
+
+  @BelongsToMany(() => User, () => UserRole)
+  users: Role[];
 }
