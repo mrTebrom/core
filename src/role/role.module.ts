@@ -8,5 +8,6 @@ import { RoleController } from './role.controller';
   imports: [SequelizeModule.forFeature([Role])],
   providers: [RoleService],
   controllers: [RoleController],
+  exports: [RoleService],
 })
 export class RoleModule {}

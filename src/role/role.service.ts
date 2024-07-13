@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Role } from './entity/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { WhereOptions } from 'sequelize';
 
 @Injectable()
 export class RoleService {
@@ -76,5 +77,15 @@ export class RoleService {
     await role.update(dto);
 
     return { message: `Роль "${role.value}" обновлена` };
+  }
+
+  async findByIds(ids: number[]): Promise<Role[]> {
+    if (ids && ids.length > 0) {
+      const options: WhereOptions = {
+        id: ids,
+      };
+      return await this.entity.findAll({ where: options });
+    }
+    return [];
   }
 }
