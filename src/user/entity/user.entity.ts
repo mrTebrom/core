@@ -5,9 +5,12 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { Role } from '../../role/entity/role.entity';
+import { UserRole } from './user-role.entity';
 
 @Table({
   tableName: 'users',
@@ -60,4 +63,7 @@ export class User extends Model<CreateUserDto, User> {
     allowNull: false,
   })
   password: string;
+
+  @BelongsToMany(() => Role, () => UserRole)
+  roles: Role[];
 }

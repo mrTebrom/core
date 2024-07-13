@@ -12,6 +12,7 @@ import { Role } from './role/entity/role.entity';
 // user
 import { UserModule } from './user/user.module';
 import { User } from './user/entity/user.entity';
+import { UserRole } from './user/entity/user-role.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { User } from './user/entity/user.entity';
         autoLoadModels: true,
         synchronize: true,
         logging: false,
-        models: [Role, User],
+        models: [Role, User, UserRole],
       }),
       inject: [ConfigService],
     }),
