@@ -79,6 +79,7 @@ export class RoleService {
     return { message: `Роль "${role.value}" обновлена` };
   }
 
+  // Получение несколько ролей по id
   async findByIds(ids: number[]): Promise<Role[]> {
     if (ids && ids.length > 0) {
       const options: WhereOptions = {
@@ -87,5 +88,10 @@ export class RoleService {
       return await this.entity.findAll({ where: options });
     }
     return [];
+  }
+
+  // Получение роли USER
+  async findUserRole(): Promise<Role> {
+    return await this.entity.findOne({ where: { value: 'user' } });
   }
 }
