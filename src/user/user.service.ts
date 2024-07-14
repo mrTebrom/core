@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleService } from 'src/role/role.service';
+import { RegisterUserDto } from 'src/auth/dto/registr-auth.dto';
 
 @Injectable()
 export class UserService {
@@ -158,5 +159,65 @@ export class UserService {
     return {
       message: `Пользователь "${user.username || user.email || user.phone}" удален`,
     };
+  }
+
+  // Регистрация пользователья
+  async registration(dto: RegisterUserDto): Promise<User> {
+    const { email, username, phone, password } = dto;
+
+    // Проверка на уникальность email, username и phone
+    if (email) {
+      const existingUserByEmail = await this.entity.findOne({
+        where: { email },
+      });
+      if (existingUserByEmail) {
+        throw new HttpException(
+          `Пользователь с email "${email}" уже существует`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    if (username) {
+      const existingUserByUsername = await this.entity.findOne({
+        where: { username },
+      });
+      if (existingUserByUsername) {
+        throw new HttpException(
+          `Пользователь с именем "${username}" уже существует`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    if (phone) {
+      const existingUserByPhone = await this.entity.findOne({
+        where: { phone },
+      });
+      if (existingUserByPhone) {
+        throw new HttpException(
+          `Пользователь с номером телефона "${phone}" уже существует`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    // Хеширование пароля перед сохранением
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Создание нового пользователя
+    const user = await this.entity.create({
+      username,
+      email,
+      phone,
+      password: hashedPassword,
+    });
+
+    // Получение роли пользователья
+    const role = await this.roleService.findUserRole();
+    // сахранение ролей
+    await user.$set('roles', role);
+
+    return user;
   }
 }
