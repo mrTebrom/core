@@ -4,12 +4,15 @@ import { User } from './entity/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User)
     private entity: typeof User,
+
+    private roleService: RoleService,
   ) {}
 
   // Метод для создания нового пользователя
@@ -57,19 +60,24 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Создание нового пользователя
-    await this.entity.create({
+    const user = await this.entity.create({
       username,
       email,
       phone,
       password: hashedPassword,
     });
 
+    // получение ролей
+    const roles = await this.roleService.findByIds(createUserDto.roles);
+    // сахранение ролей
+    user.$set('roles', roles);
+
     return { message: `Пользователь "${username || email || phone}" создан` };
   }
 
   // Метод для получения всех пользователей
   async findAll(): Promise<User[]> {
-    return this.entity.findAll();
+    return this.entity.findAll({ include: 'roles' });
   }
 
   // Метод для получения пользователя по ID
@@ -126,7 +134,12 @@ export class UserService {
     }
 
     // Обновление данных пользователя
-    await user.update(updateUserDto);
+    const updateUser = await user.update(updateUserDto);
+
+    // получение ролей
+    const roles = await this.roleService.findByIds(updateUserDto.roles);
+    // сахранение ролей
+    updateUser.$set('roles', roles);
 
     return {
       message: `Пользователь "${user.username || user.email || user.phone}" обновлен`,
