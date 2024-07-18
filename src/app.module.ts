@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { JwtModule } from '@nestjs/jwt';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +12,9 @@ import { Role } from './role/entity/role.entity';
 import { UserModule } from './user/user.module';
 import { User } from './user/entity/user.entity';
 import { UserRole } from './user/entity/user-role.entity';
+// auth
+import { AuthModule } from './auth/auth.module';
+import { Token } from './auth/entity/auth.entity';
 
 @Module({
   imports: [
@@ -30,19 +32,14 @@ import { UserRole } from './user/entity/user-role.entity';
         autoLoadModels: true,
         synchronize: true,
         logging: false,
-        models: [Role, User, UserRole],
+        models: [Role, User, UserRole, Token],
       }),
       inject: [ConfigService],
     }),
-    JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '60m' },
-      }),
-      inject: [ConfigService],
-    }),
+
     RoleModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
