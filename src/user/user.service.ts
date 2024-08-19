@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleService } from 'src/role/role.service';
 import { RegisterUserDto } from 'src/auth/dto/registr-auth.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class UserService {
@@ -219,5 +220,17 @@ export class UserService {
     await user.$set('roles', role);
 
     return user;
+  }
+
+  async findLogin(identifier: string): Promise<User | null> {
+    return this.entity.findOne({
+      where: {
+        [Op.or]: [
+          { username: identifier },
+          { phone: identifier },
+          { email: identifier },
+        ],
+      },
+    });
   }
 }
