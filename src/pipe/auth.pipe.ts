@@ -1,6 +1,8 @@
-// src/auth/jwt-access.guard.ts
-import { Injectable } from '@nestjs/common';
+import {
+  // CanActivate, ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
+// import { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
-
 @Injectable()
-export class JwtAccessGuard extends AuthGuard('access') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {}

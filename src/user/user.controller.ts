@@ -9,6 +9,7 @@ import {
   HttpException,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -16,6 +17,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
 import { UserPipe } from './pipe/user.pipe';
+import { JwtAuthGuard } from 'src/pipe/auth.pipe';
 
 @ApiTags('user')
 @Controller('user')
@@ -43,6 +45,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Получение всех пользователей' })
   @ApiResponse({
     status: 200,

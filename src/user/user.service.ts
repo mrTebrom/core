@@ -219,7 +219,7 @@ export class UserService {
     // сахранение ролей
     await user.$set('roles', role);
 
-    return user;
+    return await this.entity.findByPk(user.id, { include: { all: true } });
   }
 
   async findLogin(identifier: string): Promise<User | null> {
@@ -231,6 +231,7 @@ export class UserService {
           { email: identifier },
         ],
       },
+      include: { all: true },
     });
   }
 }

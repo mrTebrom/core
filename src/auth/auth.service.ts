@@ -1,40 +1,47 @@
-import { User } from './../user/entity/user.entity';
+// src/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
-// import { InjectModel } from '@nestjs/sequelize';
-// import { Token } from './entity/auth.entity';
-// import { RegisterUserDto } from './dto/registr-auth.dto';
+import { RegisterUserDto } from './dto/registr-auth.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterUserDto } from './dto/registr-auth.dto';
+import { LoginUserDto } from './dto/authorization-auth.dto';
 
 @Injectable()
 export class AuthService {
-  // constructor(@InjectModel(Token) private entity: Token) {}
   constructor(
-    private usersService: UserService,
-    private jwtService: JwtService,
+    private jwt: JwtService, // Сервис для работы с JWT
+    private userService: UserService, // Сервис для работы с пользователями
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findLogin(username);
-    if (user && user.password === pass) {
-      const { ...result } = user;
-      return result;
-    }
-    return null;
+  // Регистрация пользователя
+  async register(dto: RegisterUserDto) {
+    // Регистрация пользователя через UserService
+    const user = await this.userService.registration(dto);
+    // Генерация JWT токена для зарегистрированного пользователя
+    return this.generation(user);
   }
-  async generation(user: User) {
-    return this.jwtService.sign({
-      sub: user.id,
-      username: user.username,
-      phone: user.phone,
-      email: user.email,
-      roles: user.roles,
+
+  // Авторизация пользователя
+  async login(dto: LoginUserDto) {
+    // Поиск пользователя по email, телефону или имени пользователя
+    const user = await this.userService.findLogin(
+      dto.email || dto.phone || dto.username,
+    );
+    // Генерация JWT токена для авторизованного пользователя
+    return await this.generation(user);
+  }
+
+  // Генерация JWT токена
+  async generation(payload: any) {
+    console.log(payload); // Вывод полезной информации о пользователе (для отладки)
+    // Создание JWT токена с полезной нагрузкой
+    return await this.jwt.sign({
+      sub: payload.id, // ID пользователя
+      roles: payload.roles.map((item) => {
+        return item.value; // Преобразование ролей пользователя в массив значений
+      }),
+      username: payload.username, // Имя пользователя
+      phone: payload.phone, // Телефон пользователя
+      email: payload.email, // Email пользователя
     });
-  }
-  async registration(dto: RegisterUserDto) {
-    // Регистрация пользователья
-    const candidate = await this.usersService.registration(dto);
-    return this.generation(candidate);
   }
 }
