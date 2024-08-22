@@ -7,12 +7,22 @@ import {
 } from 'sequelize-typescript';
 import { User } from '../../user/entity/user.entity';
 
-@Table
+@Table // Аннотация указывает, что это таблица в базе данных
 export class Token extends Model {
+  // Внешний ключ, связывающий с пользователем
   @ForeignKey(() => User)
   @Column
   userId: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
+  // Поле для хранения refresh токена
+  @Column({
+    type: DataType.STRING, // Тип данных - строка
+    allowNull: false, // Поле обязательно для заполнения
+  })
   refreshToken: string;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  expiresAt: Date;
 }
