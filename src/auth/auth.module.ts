@@ -1,3 +1,4 @@
+import { SequelizeModule } from '@nestjs/sequelize';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -6,9 +7,11 @@ import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from 'src/strategy/jwt.strategy';
 import { AuthController } from './auth.controller';
+import { Token } from './entity/auth.entity';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([Token]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
@@ -17,6 +20,7 @@ import { AuthController } from './auth.controller';
       }),
       inject: [ConfigService],
     }),
+
     UserModule,
   ],
   providers: [AuthService, JwtStrategy],

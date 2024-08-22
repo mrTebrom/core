@@ -4,12 +4,15 @@ import { RegisterUserDto } from './dto/registr-auth.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/authorization-auth.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Token } from './entity/auth.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwt: JwtService, // Сервис для работы с JWT
     private userService: UserService, // Сервис для работы с пользователями
+    @InjectModel(Token) private model: typeof Token, // модель токена
   ) {}
 
   // Регистрация пользователя
