@@ -84,7 +84,7 @@ export class UserService {
 
   // Метод для получения пользователя по ID
   async findById(id: number): Promise<User | null> {
-    const user = await this.entity.findByPk(id);
+    const user = await this.entity.findByPk(id, { include: { all: true } });
     if (!user) {
       throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
     }

@@ -5,9 +5,10 @@ import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
-import { JwtStrategy } from 'src/strategy/jwt.strategy';
+import { JwtStrategy } from '../strategy/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { Token } from './entity/auth.entity';
+import { RefreshTokenStrategy } from 'src/strategy/refresh-jwt.strategy';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { Token } from './entity/auth.entity';
 
     UserModule,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
   exports: [JwtModule, PassportModule],
   controllers: [AuthController],
 })

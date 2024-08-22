@@ -1,23 +1,29 @@
 // src/strategy/refresh-jwt.strategy.ts
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request } from 'express';
 
 @Injectable()
-export class RefreshJwtStrategy extends PassportStrategy(
+export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  'refresh-jwt',
+  'jwt-refresh',
 ) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Извлечение токена из заголовка
-      secretOrKey: process.env.REFRESH, // Секрет для проверки refresh токенов
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          return request?.cookies?.refresh; // Извлекаем рефреш-токен из cookies
+        },
+      ]),
+      secretOrKey: process.env.REFRESH, // Секретный ключ для валидации рефреш-токена
       passReqToCallback: true,
     });
   }
 
-  async validate(payload: any) {
-    // Проверка полезной нагрузки и возвращение пользователя
-    return payload;
+  async validate(req: Request, payload: any) {
+    const refreshToken = req.cookies.refresh;
+    // Возвращаем payload и рефреш-токен для дальнейшей валидации
+    return { ...payload, refreshToken };
   }
 }

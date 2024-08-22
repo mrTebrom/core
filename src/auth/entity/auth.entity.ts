@@ -7,7 +7,7 @@ import {
 } from 'sequelize-typescript';
 import { User } from '../../user/entity/user.entity';
 
-@Table // Аннотация указывает, что это таблица в базе данных
+@Table({ tableName: 'token' }) // Аннотация указывает, что это таблица в базе данных
 export class Token extends Model {
   // Внешний ключ, связывающий с пользователем
   @ForeignKey(() => User)

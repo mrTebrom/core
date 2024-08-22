@@ -36,7 +36,10 @@ export class AuthService {
   }
 
   // Генерация JWT и рефреш токенов
-  async generateTokens(user: User) {
+  async generateTokens(user: User): Promise<{
+    accessToken: string;
+    refreshToken: string;
+  }> {
     // Создание JWT токена с полезной нагрузкой
     const accessToken = await this.jwt.sign({
       sub: user.id, // ID пользователя
@@ -74,12 +77,10 @@ export class AuthService {
     const tokenRecord = await this.entity.findOne({
       where: { refreshToken: oldRefreshToken },
     });
-
     // Проверка на наличие и срок действия рефреш токена
     if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
-      throw new NotFoundException('Неверный или просроченный рефреш токен'); // Использование NotFoundException
+      throw new NotFoundException('Неверный или просроченный рефреш токен');
     }
-
     // Поиск пользователя по ID из рефреш токена
     const user = await this.userService.findById(tokenRecord.userId);
     return this.generateTokens(user);
