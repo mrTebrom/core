@@ -49,7 +49,7 @@ export class AuthService {
     // Генерация рефреш токена
     const refreshToken = await this.jwt.sign(
       { sub: user.id },
-      { expiresIn: '7d' }, // Рефреш токен может иметь более длительный срок действия
+      { expiresIn: '7d', secret: process.env.REFRESH }, // Рефреш токен может иметь более длительный срок действия
     );
 
     // Удаление старого рефреш токена для текущего пользователя

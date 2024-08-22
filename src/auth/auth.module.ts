@@ -20,6 +20,13 @@ import { Token } from './entity/auth.entity';
       }),
       inject: [ConfigService],
     }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('REFRESH'), // Секрет для refresh токенов
+        signOptions: { expiresIn: '7d' }, // Длительный срок действия для refresh токенов
+      }),
+      inject: [ConfigService],
+    }),
 
     UserModule,
   ],
