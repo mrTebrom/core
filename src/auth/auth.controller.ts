@@ -15,6 +15,8 @@ import { LoginUserDto } from './dto/authorization-auth.dto';
 import { JwtAuthGuard } from 'src/pipe/auth.pipe';
 import { Request, Response } from 'express';
 import { RefreshAuthGuard } from 'src/pipe/refresh.pipe';
+import { RolesGuard } from 'src/pipe/role-admin/role-admin.pipe';
+import { Roles } from '../decorator/role-admin/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -42,7 +44,8 @@ export class AuthController {
     return res.json({ token: accessToken });
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('/')
   async t() {
     return 'd';
