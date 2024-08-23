@@ -51,7 +51,7 @@ export class RoleController {
   @ApiOperation({ summary: 'Получение всех ролей' })
   @ApiResponse({ status: 200, description: 'Список всех ролей.', type: [Role] })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin', 'manager') // Проверка на роль admin или manager
+  @Roles('admin') // Проверка на роль admin или manager
   @Get()
   async findAll(): Promise<Role[]> {
     return this.roleService.findAll();

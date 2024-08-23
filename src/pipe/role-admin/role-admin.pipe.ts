@@ -16,6 +16,7 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // Получаем роли, которые требуются для доступа
+
     const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
       context.getHandler(),
       context.getClass(),
@@ -27,7 +28,6 @@ export class RolesGuard implements CanActivate {
     // Извлекаем токен из заголовка Authorization
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.split(' ')[1]; // Bearer <token>
-
     if (!token) {
       throw new ForbiddenException('Token not found');
     }
@@ -36,7 +36,6 @@ export class RolesGuard implements CanActivate {
     const payload = this.jwtService.verify(token, {
       secret: process.env.SECRET,
     });
-
     // Проверяем, содержит ли пользователь необходимые роли
     const userRoles = payload.roles;
     return requiredRoles.some((role) => userRoles.includes(role));
