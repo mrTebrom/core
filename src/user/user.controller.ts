@@ -18,6 +18,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entity/user.entity';
 import { UserPipe } from './pipe/user.pipe';
 import { JwtAuthGuard } from 'src/pipe/auth.pipe';
+import { RolesGuard } from 'src/pipe/role-admin/role-admin.pipe';
+import { Roles } from '../decorator/role-admin/roles.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -32,6 +34,8 @@ export class UserController {
   })
   @Post()
   @UsePipes(UserPipe)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   async create(
     @Body() createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
@@ -45,7 +49,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Получение всех пользователей' })
   @ApiResponse({
     status: 200,
@@ -57,6 +62,7 @@ export class UserController {
     return this.service.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Получение пользователя по идентификатору' })
   @ApiParam({
     name: 'id',
@@ -70,6 +76,8 @@ export class UserController {
     return this.service.findById(id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Обновление существующего пользователя' })
   @ApiParam({
     name: 'id',
@@ -97,6 +105,8 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Удаление пользователя' })
   @ApiParam({
     name: 'id',
