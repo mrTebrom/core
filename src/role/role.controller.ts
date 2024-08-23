@@ -8,12 +8,16 @@ import {
   HttpException,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entity/role.entity';
+import { JwtAuthGuard } from 'src/pipe/auth.pipe';
+import { RolesGuard } from 'src/pipe/role-admin/role-admin.pipe';
+import { Roles } from 'src/decorator/role-admin/roles.decorator';
 
 @ApiTags('role') // Тег для группировки эндпоинтов в Swagger
 @Controller('role')
@@ -27,6 +31,8 @@ export class RoleController {
     status: 400,
     description: 'Некорректные данные или роль уже существует.',
   })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // Проверка на роль admin
   @Post()
   async create(
     @Body() createRoleDto: CreateRoleDto,
@@ -44,6 +50,8 @@ export class RoleController {
   // Получение всех ролей
   @ApiOperation({ summary: 'Получение всех ролей' })
   @ApiResponse({ status: 200, description: 'Список всех ролей.', type: [Role] })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'manager') // Проверка на роль admin или manager
   @Get()
   async findAll(): Promise<Role[]> {
     return this.roleService.findAll();
@@ -58,6 +66,8 @@ export class RoleController {
     status: 400,
     description: 'Некорректные данные или роль уже существует.',
   })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // Только администратор может обновлять роли
   @Put(':id')
   async update(
     @Param('id') id: number,
@@ -72,12 +82,13 @@ export class RoleController {
       );
     }
   }
-
   // Удаление роли
   @ApiOperation({ summary: 'Удаление роли' })
   @ApiParam({ name: 'id', description: 'Идентификатор роли', example: 1 })
   @ApiResponse({ status: 200, description: 'Роль успешно удалена.' })
   @ApiResponse({ status: 404, description: 'Роль не найдена.' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // Только администратор может удалять роли
   @Delete(':id')
   async destroy(@Param('id') id: number): Promise<{ message: string }> {
     try {

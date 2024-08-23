@@ -1,5 +1,5 @@
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
@@ -10,6 +10,7 @@ import { AuthController } from './auth.controller';
 import { Token } from './entity/auth.entity';
 import { RefreshTokenStrategy } from 'src/strategy/refresh-jwt.strategy';
 
+@Global()
 @Module({
   imports: [
     SequelizeModule.forFeature([Token]),
