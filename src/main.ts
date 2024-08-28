@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Документация')
     .setDescription('API core backend')
@@ -15,6 +16,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();

@@ -15,6 +15,7 @@ import { UserRole } from './user/entity/user-role.entity';
 // auth
 import { AuthModule } from './auth/auth.module';
 import { Token } from './auth/entity/auth.entity';
+import { SpecializationsModule } from './specializations/specializations.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { Token } from './auth/entity/auth.entity';
     AuthModule,
     RoleModule,
     UserModule,
+    SpecializationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
