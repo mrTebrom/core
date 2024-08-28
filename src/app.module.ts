@@ -15,7 +15,9 @@ import { UserRole } from './user/entity/user-role.entity';
 // auth
 import { AuthModule } from './auth/auth.module';
 import { Token } from './auth/entity/auth.entity';
+// специальности
 import { SpecializationsModule } from './specializations/specializations.module';
+import { Specialization } from './specializations/entities/specialization.entity';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { SpecializationsModule } from './specializations/specializations.module'
         synchronize: true,
         logging: false,
 
-        models: [Role, User, UserRole, Token],
+        models: [Role, User, UserRole, Token, Specialization],
       }),
       inject: [ConfigService],
     }),
